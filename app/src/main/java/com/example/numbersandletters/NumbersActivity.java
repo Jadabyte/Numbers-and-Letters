@@ -3,6 +3,7 @@ package com.example.numbersandletters;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.TypedArrayUtils;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -63,6 +64,19 @@ public class NumbersActivity extends AppCompatActivity {
                     mLowNumber.setVisibility(View.INVISIBLE);
                     mContinue.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        mContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Class destinationActivity = NumbersPlayingActivity.class;
+                Intent startGame = new Intent(NumbersActivity.this, destinationActivity);
+
+                // https://stackoverflow.com/a/6543850
+                startGame.putStringArrayListExtra("selectedNumbers", (ArrayList<String>) selectedNumbers);
+
+                startActivity(startGame);
             }
         });
 
