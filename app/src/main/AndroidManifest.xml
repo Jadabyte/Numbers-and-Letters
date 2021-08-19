@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NumbersAndLetters">
-        <activity android:name=".NumbersPlayingActivity"></activity>
+        <activity android:name=".NumbersResultsActivity"></activity>
+        <activity android:name=".NumbersPlayingActivity" />
         <activity android:name=".NumbersActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

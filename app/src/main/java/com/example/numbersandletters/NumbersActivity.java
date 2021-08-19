@@ -33,17 +33,26 @@ public class NumbersActivity extends AppCompatActivity {
         mSelectedNumbers = (TextView) findViewById(R.id.tv_selected_numbers);
         mHighNumber = (Button) findViewById(R.id.b_high_number);
         mContinue = (Button) findViewById(R.id.b_continue);
+
+        // Creates the ArrayList that will store the numbers
         selectedNumbers = new ArrayList<String>();
 
         mHighNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int random = new Random().nextInt(highNumberArray.length);
+
+                // Adds a random number from our high number array into the ArrayList
                 selectedNumbers.add(String.valueOf(highNumberArray[random]));
+
+                // Shows the current set of numbers in the application
                 mSelectedNumbers.setText(String.valueOf(selectedNumbers));
 
                 //Toast.makeText(getBaseContext(), String.valueOf(selectedNumbers) , Toast.LENGTH_SHORT ).show();
-                if(selectedNumbers.size() == 9){
+
+                // Replaces the high and low buttons with a continue button
+                // once enough numbers have been generated
+                if(selectedNumbers.size() == 6){
                     mHighNumber.setVisibility(View.INVISIBLE);
                     mLowNumber.setVisibility(View.INVISIBLE);
                     mContinue.setVisibility(View.VISIBLE);
@@ -59,7 +68,7 @@ public class NumbersActivity extends AppCompatActivity {
                 selectedNumbers.add(String.valueOf(random));
                 mSelectedNumbers.setText(String.valueOf(selectedNumbers));
 
-                if(selectedNumbers.size() == 9){
+                if(selectedNumbers.size() == 6){
                     mHighNumber.setVisibility(View.INVISIBLE);
                     mLowNumber.setVisibility(View.INVISIBLE);
                     mContinue.setVisibility(View.VISIBLE);
@@ -74,6 +83,7 @@ public class NumbersActivity extends AppCompatActivity {
                 Intent startGame = new Intent(NumbersActivity.this, destinationActivity);
 
                 // https://stackoverflow.com/a/6543850
+                // This will transfer the ArrayList of selected numbers onto the next page
                 startGame.putStringArrayListExtra("selectedNumbers", (ArrayList<String>) selectedNumbers);
 
                 startActivity(startGame);
