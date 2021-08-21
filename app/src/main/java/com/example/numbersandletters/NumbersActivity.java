@@ -22,7 +22,7 @@ public class NumbersActivity extends AppCompatActivity {
     private Button mLowNumber;
     private Button mContinue;
     private TextView mSelectedNumbers;
-    private List<String> selectedNumbers;
+    private List<Integer> selectedNumbers;
     private int[] highNumberArray = {10, 25, 50, 100};
 
     @Override
@@ -35,7 +35,7 @@ public class NumbersActivity extends AppCompatActivity {
         mContinue = (Button) findViewById(R.id.b_continue);
 
         // Creates the ArrayList that will store the numbers
-        selectedNumbers = new ArrayList<String>();
+        selectedNumbers = new ArrayList<Integer>();
 
         mHighNumber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +43,7 @@ public class NumbersActivity extends AppCompatActivity {
                 int random = new Random().nextInt(highNumberArray.length);
 
                 // Adds a random number from our high number array into the ArrayList
-                selectedNumbers.add(String.valueOf(highNumberArray[random]));
+                selectedNumbers.add((highNumberArray[random]));
 
                 // Shows the current set of numbers in the application
                 mSelectedNumbers.setText(String.valueOf(selectedNumbers));
@@ -65,7 +65,7 @@ public class NumbersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int random = new Random().nextInt(9 - 1 + 1) + 1;
-                selectedNumbers.add(String.valueOf(random));
+                selectedNumbers.add((random));
                 mSelectedNumbers.setText(String.valueOf(selectedNumbers));
 
                 if(selectedNumbers.size() == 6){
@@ -84,7 +84,7 @@ public class NumbersActivity extends AppCompatActivity {
 
                 // https://stackoverflow.com/a/6543850
                 // This will transfer the ArrayList of selected numbers onto the next page
-                startGame.putStringArrayListExtra("selectedNumbers", (ArrayList<String>) selectedNumbers);
+                startGame.putIntegerArrayListExtra("selectedNumbers", (ArrayList<Integer>) selectedNumbers);
 
                 startActivity(startGame);
             }

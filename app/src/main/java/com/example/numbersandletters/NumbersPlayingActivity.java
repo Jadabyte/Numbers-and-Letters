@@ -23,6 +23,7 @@ public class NumbersPlayingActivity extends AppCompatActivity {
     private EditText mAnswer1;
     private EditText mAnswer2;
     private Button mConfirm;
+    private int goalNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class NumbersPlayingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_numbers_playing);
 
         // Translates the transferred intent into a usable variable
-        ArrayList<String> selectedNumbers = getIntent().getStringArrayListExtra("selectedNumbers");
+        ArrayList<Integer> selectedNumbers = getIntent().getIntegerArrayListExtra("selectedNumbers");
 
         mGoalNumber = (TextView) findViewById(R.id.tv_goal_number);
         mSelectedNumbers = (TextView) findViewById(R.id.tv_selected_numbers);
@@ -42,8 +43,8 @@ public class NumbersPlayingActivity extends AppCompatActivity {
         mAnswer2 = (EditText) findViewById(R.id.et_answer_2);
 
         // Generates a random number and places it in the view
-        int random = new Random().nextInt(1000 - 100 + 1) + 100;
-        mGoalNumber.setText(String.valueOf(random));
+        goalNumber = new Random().nextInt(1000 - 100 + 1) + 100;
+        mGoalNumber.setText(String.valueOf(goalNumber));
 
         // Places the selected numbers into the view
         mSelectedNumbers.setText(String.valueOf(selectedNumbers));
@@ -70,7 +71,8 @@ public class NumbersPlayingActivity extends AppCompatActivity {
 
                 showResults.putExtra("Player1Answer", Player1Answer);
                 showResults.putExtra("Player2Answer", Player2Answer);
-                showResults.putStringArrayListExtra("selectedNumbers", (ArrayList<String>) selectedNumbers);
+                showResults.putExtra("goalNumber", goalNumber);
+                showResults.putIntegerArrayListExtra("selectedNumbers", (ArrayList<Integer>) selectedNumbers);
 
                 startActivity(showResults);
             }
