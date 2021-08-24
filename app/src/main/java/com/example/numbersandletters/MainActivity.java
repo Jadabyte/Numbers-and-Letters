@@ -1,6 +1,8 @@
 package com.example.numbersandletters;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,16 +19,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /*
+        Fragment numbersFragment = new numbersFragment();
+        Fragment lettersFragment = new lettersFragment();
 
         mStartGameButton = (Button) findViewById(R.id.b_start_game);
 
-        mStartGameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Class destinationActivity = NumbersActivity.class;
-                Intent startGame = new Intent(MainActivity.this, destinationActivity);
-                startActivity(startGame);
-            }
-        });
+        mStartGameButton.setOnClickListener(view -> {
+            FragmentManager fm = getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.numbersFragmentLayout, numbersFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });*/
     }
 }
