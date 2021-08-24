@@ -1,4 +1,36 @@
 package com.example.numbersandletters;
 
-public class NumberViewModel {
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+public class NumberViewModel extends ViewModel {
+    private MutableLiveData<ArrayList<Integer>> numbers;
+
+    private static final int SMALL_NUMBERS_CEIL = 9;
+    private static final int SMALL_NUMBERS_FLOOR = 1;
+    private static final int[] LARGE_NUMBERS_AVAIL = {10, 25, 50, 100};
+
+    public MutableLiveData<ArrayList<Integer>> getNumbers(){
+        if(numbers == null){
+            numbers = new MutableLiveData<ArrayList<Integer>>();
+            numbers.setValue(new ArrayList<Integer>());
+        }
+        return numbers;
+    }
+
+    public void genSmall(){
+        ArrayList<Integer> generatedNumbers = getNumbers().getValue();
+        // A 1 is added in this instance since java's random number generation is inclusive of the floor but not the ceiling
+        generatedNumbers.add(new Random().nextInt(SMALL_NUMBERS_CEIL - SMALL_NUMBERS_FLOOR + 1) + SMALL_NUMBERS_FLOOR);
+        numbers.setValue(generatedNumbers);
+    }
+
+    public void genLarge(){
+        ArrayList<Integer> generatedNumbers = getNumbers().getValue();
+        generatedNumbers.add(LARGE_NUMBERS_AVAIL[new Random().nextInt(LARGE_NUMBERS_AVAIL.length) - 1]);
+        numbers.setValue(generatedNumbers);
+    }
 }
