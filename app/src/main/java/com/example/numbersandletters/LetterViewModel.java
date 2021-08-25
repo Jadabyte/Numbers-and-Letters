@@ -1,4 +1,7 @@
 package com.example.numbersandletters;
 
-public class LetterViewModel {
+import androidx.lifecycle.ViewModel;
+
+public class LetterViewModel extends ViewModel {
+    // TODO: Implement the ViewModel
 }

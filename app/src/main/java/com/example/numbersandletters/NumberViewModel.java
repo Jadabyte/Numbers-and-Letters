@@ -12,6 +12,7 @@ public class NumberViewModel extends ViewModel {
     private static final int SMALL_NUMBERS_CEIL = 9;
     private static final int SMALL_NUMBERS_FLOOR = 1;
     private static final int[] LARGE_NUMBERS_AVAIL = {10, 25, 50, 100};
+    private static final int MAX_NUMBERS = 6;
 
     public MutableLiveData<ArrayList<Integer>> getNumbers(){
         if(numbers == null){
@@ -22,15 +23,24 @@ public class NumberViewModel extends ViewModel {
     }
 
     public void genSmall(){
-        ArrayList<Integer> generatedNumbers = getNumbers().getValue();
-        // A 1 is added in this instance since java's random number generation is inclusive of the floor but not the ceiling
-        generatedNumbers.add(new Random().nextInt(SMALL_NUMBERS_CEIL - SMALL_NUMBERS_FLOOR + 1) + SMALL_NUMBERS_FLOOR);
-        numbers.setValue(generatedNumbers);
+        if(lengthCheck() < MAX_NUMBERS) {
+            ArrayList<Integer> generatedNumbers = getNumbers().getValue();
+            // A 1 is added in this instance since java's random number generation is inclusive of the floor but not the ceiling
+            generatedNumbers.add(new Random().nextInt(SMALL_NUMBERS_CEIL - SMALL_NUMBERS_FLOOR + 1) + SMALL_NUMBERS_FLOOR);
+            numbers.setValue(generatedNumbers);
+        }
     }
 
     public void genLarge(){
-        ArrayList<Integer> generatedNumbers = getNumbers().getValue();
-        generatedNumbers.add(LARGE_NUMBERS_AVAIL[new Random().nextInt(LARGE_NUMBERS_AVAIL.length) - 1]);
-        numbers.setValue(generatedNumbers);
+        if(lengthCheck() < MAX_NUMBERS) {
+            ArrayList<Integer> generatedNumbers = getNumbers().getValue();
+            generatedNumbers.add(LARGE_NUMBERS_AVAIL[new Random().nextInt(LARGE_NUMBERS_AVAIL.length) - 1]);
+            numbers.setValue(generatedNumbers);
+        }
+    }
+
+    public int lengthCheck(){
+        int length = getNumbers().getValue().size();
+        return length;
     }
 }
