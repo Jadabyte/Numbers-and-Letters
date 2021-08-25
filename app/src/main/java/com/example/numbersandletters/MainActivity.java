@@ -16,9 +16,12 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     TextView tvGeneratedItems;
+    Button btnStartRound;
 
     NumberViewModel numberViewModel;
     NumberFragment numberFragment;
+
+    private static int MAX_NUMBERS = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,25 +32,24 @@ public class MainActivity extends AppCompatActivity {
         numberFragment = new NumberFragment();
 
         tvGeneratedItems = findViewById(R.id.tv_generated_items);
+        btnStartRound = findViewById(R.id.btn_start_round);
 
         numberViewModel.getNumbers().observe(this, number ->
                 tvGeneratedItems.setText(number.toString()));
 
+        numberViewModel.lengthCheck().observe(this, numbersLength -> {
+                //TO DO: hide number fragment when enough numbers have been generated
+                //TO DO: show a 'start round' button
+                if(numbersLength + 1 == MAX_NUMBERS) {
+                    getSupportFragmentManager().beginTransaction()
+                            .remove(numberFragment)
+                            .commit();
+                    btnStartRound.setVisibility(View.VISIBLE);
+                }
+            });
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_insert, numberFragment)
                 .commit();
-        /*
-        Fragment numbersFragment = new numbersFragment();
-        Fragment lettersFragment = new lettersFragment();
-
-        mStartGameButton = (Button) findViewById(R.id.b_start_game);
-
-        mStartGameButton.setOnClickListener(view -> {
-            FragmentManager fm = getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.numbersFragmentLayout, numbersFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });*/
     }
 }
