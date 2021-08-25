@@ -9,11 +9,15 @@ import java.util.Random;
 public class NumberViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Integer>> numbers;
     private MutableLiveData<Integer> numbersLength;
+    private Integer goalNumber;
 
     private static final int SMALL_NUMBERS_CEIL = 9;
     private static final int SMALL_NUMBERS_FLOOR = 1;
     private static final int[] LARGE_NUMBERS_AVAIL = {10, 25, 50, 100};
     private static final int MAX_NUMBERS = 6;
+
+    private static final int GOAL_NUMBER_FLOOR = 100;
+    private static final int GOAL_NUMBER_CEIL = 1000;
 
     public MutableLiveData<ArrayList<Integer>> getNumbers(){
         if(numbers == null){
@@ -21,6 +25,11 @@ public class NumberViewModel extends ViewModel {
             numbers.setValue(new ArrayList<Integer>());
         }
         return numbers;
+    }
+
+    public Integer getGoalNumber() {
+
+        return goalNumber;
     }
 
     public void genSmall(){
@@ -38,6 +47,13 @@ public class NumberViewModel extends ViewModel {
             generatedNumbers.add(LARGE_NUMBERS_AVAIL[new Random().nextInt(LARGE_NUMBERS_AVAIL.length)]);
             numbers.setValue(generatedNumbers);
         }
+    }
+
+    public int genGoal(){
+        if(goalNumber == null){
+            goalNumber = new Random().nextInt(GOAL_NUMBER_CEIL - GOAL_NUMBER_FLOOR + 1) + GOAL_NUMBER_FLOOR;
+        }
+        return goalNumber;
     }
 
     public MutableLiveData<Integer> lengthCheck(){
