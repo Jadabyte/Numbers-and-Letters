@@ -94,15 +94,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void endRound(View v){
-
+        //TODO: Take the users' answers and send them to the solver
+        //TODO: Show solver solutions
+        //TODO: Show button for next round
     }
 
     public void nextRound(View v){
-
+        //TODO: Implement nextRound from MetaViewModel
     }
 
     public void newGame(View v){
-
+        //TODO: Only usable after final round is completed
+        //TODO: Clear all values and return to first screen
     }
 
     public void startTimer(){
