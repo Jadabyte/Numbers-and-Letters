@@ -65,4 +65,10 @@ public class NumberViewModel extends ViewModel {
         numbersLength.setValue(length);
         return numbersLength;
     }
+
+    public void clearNumbers(){
+        ArrayList<Integer> generatedNumbers = getNumbers().getValue();
+        generatedNumbers.clear();
+        numbers.setValue(generatedNumbers);
+    }
 }

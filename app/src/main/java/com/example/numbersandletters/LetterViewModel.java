@@ -8,6 +8,9 @@ import java.util.Random;
 
 public class LetterViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Character>> letters;
+    private MutableLiveData<Integer> lettersLength;
+
+    private static final int MAX_LETTERS = 9;
 
     public MutableLiveData<ArrayList<Character>> getLetters(){
         if(letters == null){
@@ -18,23 +21,27 @@ public class LetterViewModel extends ViewModel {
     }
 
     public void genVowel(){
-        ArrayList<Character> generatedLetters = getLetters().getValue();
-        char generatedLetter;
-        do {
-            generatedLetter = genLetter();
-        } while (!checkVowel(generatedLetter));
-        generatedLetters.add(generatedLetter);
-        letters.setValue(generatedLetters);
+        if(lengthCheck().getValue() < MAX_LETTERS) {
+            ArrayList<Character> generatedLetters = getLetters().getValue();
+            char generatedLetter;
+            do {
+                generatedLetter = genLetter();
+            } while (!checkVowel(generatedLetter));
+            generatedLetters.add(generatedLetter);
+            letters.setValue(generatedLetters);
+        }
     }
 
     public void genConsonant(){
-        ArrayList<Character> generatedLetters = getLetters().getValue();
-        char generatedLetter;
-        do{
-            generatedLetter = genLetter();
-        } while (!checkConsonant(generatedLetter));
-        generatedLetters.add(generatedLetter);
-        letters.setValue(generatedLetters);
+        if(lengthCheck().getValue() < MAX_LETTERS) {
+            ArrayList<Character> generatedLetters = getLetters().getValue();
+            char generatedLetter;
+            do {
+                generatedLetter = genLetter();
+            } while (!checkConsonant(generatedLetter));
+            generatedLetters.add(generatedLetter);
+            letters.setValue(generatedLetters);
+        }
     }
 
     public char genLetter(){
@@ -55,5 +62,22 @@ public class LetterViewModel extends ViewModel {
 
     private boolean checkConsonant(char generatedLetter){
         return !checkVowel(generatedLetter);
+    }
+
+    //TODO: Think about moving this to the MetaViewModel since it's the same function for both letters and numbers
+    public MutableLiveData<Integer> lengthCheck(){
+        int length = getLetters().getValue().size();
+        if(lettersLength == null){
+            lettersLength = new MutableLiveData<Integer>();
+            lettersLength.setValue(length);
+        }
+        lettersLength.setValue(length);
+        return lettersLength;
+    }
+
+    public void clearLetters(){
+        ArrayList<Character> generatedLetters = getLetters().getValue();
+        generatedLetters.clear();
+        letters.setValue(generatedLetters);
     }
 }

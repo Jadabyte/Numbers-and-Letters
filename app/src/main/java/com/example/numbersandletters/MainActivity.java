@@ -16,24 +16,30 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static java.lang.String.valueOf;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView tvGeneratedItems;
     TextView tvGoal;
     TextView tvTimer;
     TextView tvPlayerTurn;
+    TextView tvScore1;
+    TextView tvScore2;
 
     EditText etAnswer1;
     EditText etAnswer2;
 
     Button btnStartRound;
     Button btnEndRound;
+    Button btnNextRound;
 
     NumberViewModel numberViewModel;
     LetterViewModel letterViewModel;
     MetaViewModel metaViewModel;
 
     NumberFragment numberFragment;
+    LetterFragment letterFragment;
 
     private final static int MAX_NUMBERS = 6;
     private final static int TIMER_LENGTH = 5; // Timer length in seconds
@@ -43,52 +49,92 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /**
+         * ------------------------------------------
+         * Area for defining ViewModels and Fragments
+         * ------------------------------------------
+         * */
         numberViewModel = new ViewModelProvider(this).get(NumberViewModel.class);
         letterViewModel = new ViewModelProvider(this).get(LetterViewModel.class);
         metaViewModel = new ViewModelProvider(this).get(MetaViewModel.class);
         numberFragment = new NumberFragment();
+        letterFragment = new LetterFragment();
 
+        /**
+         * ------------------------------------------
+         * Area for defining items in views
+         * ------------------------------------------
+         * */
         tvGeneratedItems = findViewById(R.id.tv_generated_items);
         tvGoal = findViewById(R.id.tv_goal);
         tvTimer = findViewById(R.id.tv_timer);
         tvPlayerTurn = findViewById(R.id.tv_player_choose);
+        tvScore1 = findViewById(R.id.tv_score_1);
+        tvScore2 = findViewById(R.id.tv_score_2);
 
         etAnswer1 = findViewById(R.id.et_answer_1);
         etAnswer2 = findViewById(R.id.et_answer_2);
 
         btnStartRound = findViewById(R.id.btn_start_round);
         btnEndRound = findViewById(R.id.btn_finish_round);
+        btnNextRound = findViewById(R.id.btn_next_round);
 
+        /**
+         * ------------------------------------------
+         * Rounds logic
+         * ------------------------------------------
+         * */
+
+        tvPlayerTurn.setText("Player 1");
         numberViewModel.getNumbers().observe(this, number -> {
-                tvGeneratedItems.setText(number.toString());
+            tvGeneratedItems.setText(number.toString());
 
-                if(tvPlayerTurn.getText().toString() == "Player 1"){
-                    tvPlayerTurn.setText("Player 2");
-                }
-                else{
-                    tvPlayerTurn.setText("Player 1");
-                }
-                });
+            if(tvPlayerTurn.getText().toString() == "Player 1"){
+                tvPlayerTurn.setText("Player 2");
+            }
+            else{
+                tvPlayerTurn.setText("Player 1");
+            }
+        });
 
         numberViewModel.lengthCheck().observe(this, numbersLength -> {
-                //TO DO: hide number fragment when enough numbers have been generated
-                //TO DO: show a 'start round' button
-                if(numbersLength + 1 == MAX_NUMBERS) {
-                    getSupportFragmentManager().beginTransaction()
-                            .remove(numberFragment)
-                            .commit();
-                    btnStartRound.setVisibility(View.VISIBLE);
-                    tvPlayerTurn.setVisibility(View.INVISIBLE);
-                }
-                });
+            if(numbersLength + 1 == MAX_NUMBERS) {
+                getSupportFragmentManager().beginTransaction()
+                        .remove(numberFragment)
+                        .commit();
+                btnStartRound.setVisibility(View.VISIBLE);
+                tvPlayerTurn.setVisibility(View.INVISIBLE);
+            }
+        });
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_insert, numberFragment)
-                .commit();
+        letterViewModel.getLetters().observe(this, character -> {
+            tvGeneratedItems.setText(character.toString());
+
+            if(tvPlayerTurn.getText().toString() == "Player 1"){
+                tvPlayerTurn.setText("Player 2");
+            }
+            else{
+                tvPlayerTurn.setText("Player 1");
+            }
+        });
+
+        metaViewModel.getCurrentRound().observe(this, round -> {
+            if(round == MetaViewModel.NUMBERS_ROUND){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_insert, numberFragment)
+                        .commit();
+            }
+            else{
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_insert, letterFragment)
+                        .commit();
+            }
+        });
+
     }
 
     public void startRound(View v){
-        tvGoal.setText(String.valueOf(numberViewModel.genGoal()));
+        tvGoal.setText(valueOf(numberViewModel.genGoal()));
         btnStartRound.setVisibility(View.INVISIBLE);
         startTimer();
     }
@@ -97,6 +143,22 @@ public class MainActivity extends AppCompatActivity {
         //TODO: Take the users' answers and send them to the solver
         //TODO: Show solver solutions
         //TODO: Show button for next round
+        metaViewModel.updateScores(
+                Integer.parseInt(etAnswer1.getText().toString()),
+                Integer.parseInt(etAnswer2.getText().toString()),
+                numberViewModel.getGoalNumber());
+
+        etAnswer1.setVisibility(View.INVISIBLE);
+        tvScore1.append(valueOf(metaViewModel.getPlayer1Score()));
+        tvScore1.setVisibility(View.VISIBLE);
+
+        etAnswer2.setVisibility(View.INVISIBLE);
+        tvScore2.append(valueOf(metaViewModel.getPlayer2Score()));
+        tvScore2.setVisibility(View.VISIBLE);
+
+        btnEndRound.setVisibility(View.INVISIBLE);
+        btnNextRound.setVisibility(View.VISIBLE);
+
     }
 
     public void nextRound(View v){
