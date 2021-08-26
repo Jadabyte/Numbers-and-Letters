@@ -14,7 +14,7 @@ public class NumberViewModel extends ViewModel {
     private static final int SMALL_NUMBERS_CEIL = 9;
     private static final int SMALL_NUMBERS_FLOOR = 1;
     private static final int[] LARGE_NUMBERS_AVAIL = {10, 25, 50, 100};
-    private static final int MAX_NUMBERS = 6;
+    public static final int MAX_NUMBERS = 6;
 
     private static final int GOAL_NUMBER_FLOOR = 100;
     private static final int GOAL_NUMBER_CEIL = 1000;

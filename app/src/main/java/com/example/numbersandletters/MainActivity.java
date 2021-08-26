@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvPlayerTurn;
     TextView tvScore1;
     TextView tvScore2;
+    TextView tvRoundNumber;
+    TextView tvRoundType;
 
     EditText etAnswer1;
     EditText etAnswer2;
@@ -41,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
     NumberFragment numberFragment;
     LetterFragment letterFragment;
 
-    private final static int MAX_NUMBERS = 6;
-    private final static int TIMER_LENGTH = 5; // Timer length in seconds
+    private final static int TIMER_LENGTH = 1; // Timer length in seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         tvPlayerTurn = findViewById(R.id.tv_player_choose);
         tvScore1 = findViewById(R.id.tv_score_1);
         tvScore2 = findViewById(R.id.tv_score_2);
+        tvRoundNumber = findViewById(R.id.tv_round_number);
+        tvRoundType = findViewById(R.id.tv_round_type);
 
         etAnswer1 = findViewById(R.id.et_answer_1);
         etAnswer2 = findViewById(R.id.et_answer_2);
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         numberViewModel.lengthCheck().observe(this, numbersLength -> {
-            if(numbersLength + 1 == MAX_NUMBERS) {
+            if(numbersLength + 1 == NumberViewModel.MAX_NUMBERS) {
                 getSupportFragmentManager().beginTransaction()
                         .remove(numberFragment)
                         .commit();
@@ -118,17 +121,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        metaViewModel.getCurrentRound().observe(this, round -> {
+        metaViewModel.getCheckRound().observe(this, round -> {
             if(round == MetaViewModel.NUMBERS_ROUND){
+                tvRoundType.setText("Numbers");
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_insert, numberFragment)
                         .commit();
             }
             else{
+                tvRoundType.setText("Letters");
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_insert, letterFragment)
                         .commit();
             }
+            tvRoundNumber.setText("Round " + String.valueOf(metaViewModel.currentRound) + ":");
+            Toast.makeText(getApplicationContext(), String.valueOf(metaViewModel.currentRound),Toast.LENGTH_SHORT).show();
         });
 
     }
@@ -163,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void nextRound(View v){
         //TODO: Implement nextRound from MetaViewModel
+        metaViewModel.nextRound();
+        numberViewModel.clearNumbers();
+        letterViewModel.clearLetters();
+        btnNextRound.setVisibility(View.INVISIBLE);
     }
 
     public void newGame(View v){

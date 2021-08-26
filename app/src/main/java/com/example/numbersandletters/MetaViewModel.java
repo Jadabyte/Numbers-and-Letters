@@ -8,7 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class MetaViewModel extends ViewModel {
-    private MutableLiveData<Integer> currentRound;
+    private MutableLiveData<Integer> checkRound;
+    public int currentRound = 1;
     private int player1Score;
     private int player2Score;
 
@@ -17,11 +18,11 @@ public class MetaViewModel extends ViewModel {
     public static final int LETTERS_ROUND_1 = 3;
     public static final int LETTERS_ROUND_2 = 6;
 
-    public MutableLiveData<Integer> getCurrentRound() {
-        if(currentRound == null){
-            currentRound = new MutableLiveData<Integer>(NUMBERS_ROUND);
+    public MutableLiveData<Integer> getCheckRound() {
+        if(checkRound == null){
+            checkRound = new MutableLiveData<Integer>(NUMBERS_ROUND);
         }
-        return currentRound;
+        return checkRound;
     }
 
     public int getPlayer1Score() {
@@ -35,15 +36,17 @@ public class MetaViewModel extends ViewModel {
     public void nextRound(){
         //TODO: After each round, the counter must go up and the correct round type must be shown
         //TODO: Make it so there's 2 number rounds followed by 1 letters round (x2)
-        int round = getCurrentRound().getValue();
-
-        if(round < TOTAL_ROUNDS){
-            round++;
+        if (currentRound == LETTERS_ROUND_1 || currentRound == LETTERS_ROUND_2){
+            getCheckRound().setValue(1);
         }
-        currentRound.setValue(round);
+        else{
+            getCheckRound().setValue(0);
+        }
+        currentRound = currentRound + 1;
     }
 
     public int scoreCheck(int answer, int goal){
+        //TODO: Change this to using abs() for a simpler function (https://www.tutorialspoint.com/java/number_abs.htm)
         int distanceCheck;
 
         if(answer > goal){
