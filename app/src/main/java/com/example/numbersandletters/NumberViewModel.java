@@ -56,6 +56,7 @@ public class NumberViewModel extends ViewModel {
         return goalNumber;
     }
 
+    //TODO: Find a way to transfer this to the MetaViewModel
     public MutableLiveData<Integer> lengthCheck(){
         int length = getNumbers().getValue().size();
         if(numbersLength == null){
@@ -70,5 +71,9 @@ public class NumberViewModel extends ViewModel {
         ArrayList<Integer> generatedNumbers = getNumbers().getValue();
         generatedNumbers.clear();
         numbers.setValue(generatedNumbers);
+    }
+
+    public void clearGoal(){
+        goalNumber = null;
     }
 }

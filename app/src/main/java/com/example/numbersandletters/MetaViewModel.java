@@ -7,15 +7,17 @@ import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
+
 public class MetaViewModel extends ViewModel {
     private MutableLiveData<Integer> checkRound;
     public int currentRound = 1;
-    private int player1Score;
-    private int player2Score;
+    public int player1Score;
+    public int player2Score;
 
     public static final int TOTAL_ROUNDS = 6;
     public static final int NUMBERS_ROUND = 0;
-    public static final int LETTERS_ROUND_1 = 3;
+    public static final int LETTERS_ROUND_1 = 1;
     public static final int LETTERS_ROUND_2 = 6;
 
     public MutableLiveData<Integer> getCheckRound() {

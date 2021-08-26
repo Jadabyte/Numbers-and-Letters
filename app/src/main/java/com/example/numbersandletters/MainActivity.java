@@ -24,13 +24,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvGoal;
     TextView tvTimer;
     TextView tvPlayerTurn;
-    TextView tvScore1;
-    TextView tvScore2;
     TextView tvRoundNumber;
     TextView tvRoundType;
-
-    EditText etAnswer1;
-    EditText etAnswer2;
 
     Button btnStartRound;
     Button btnEndRound;
@@ -42,8 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     NumberFragment numberFragment;
     LetterFragment letterFragment;
+    SolutionsFragment solutionsFragment;
+    ScoresFragment scoresFragment;
 
     private final static int TIMER_LENGTH = 1; // Timer length in seconds
+    private final static String ROUND_TYPE_1 = "Numbers";
+    private final static String ROUND_TYPE_2 = "Letters";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         metaViewModel = new ViewModelProvider(this).get(MetaViewModel.class);
         numberFragment = new NumberFragment();
         letterFragment = new LetterFragment();
+        solutionsFragment = new SolutionsFragment();
+        scoresFragment = new ScoresFragment();
 
         /**
          * ------------------------------------------
@@ -70,13 +71,8 @@ public class MainActivity extends AppCompatActivity {
         tvGoal = findViewById(R.id.tv_goal);
         tvTimer = findViewById(R.id.tv_timer);
         tvPlayerTurn = findViewById(R.id.tv_player_choose);
-        tvScore1 = findViewById(R.id.tv_score_1);
-        tvScore2 = findViewById(R.id.tv_score_2);
         tvRoundNumber = findViewById(R.id.tv_round_number);
         tvRoundType = findViewById(R.id.tv_round_type);
-
-        etAnswer1 = findViewById(R.id.et_answer_1);
-        etAnswer2 = findViewById(R.id.et_answer_2);
 
         btnStartRound = findViewById(R.id.btn_start_round);
         btnEndRound = findViewById(R.id.btn_finish_round);
@@ -89,15 +85,10 @@ public class MainActivity extends AppCompatActivity {
          * */
 
         tvPlayerTurn.setText("Player 1");
+
         numberViewModel.getNumbers().observe(this, number -> {
             tvGeneratedItems.setText(number.toString());
-
-            if(tvPlayerTurn.getText().toString() == "Player 1"){
-                tvPlayerTurn.setText("Player 2");
-            }
-            else{
-                tvPlayerTurn.setText("Player 1");
-            }
+            playerSwitch();
         });
 
         numberViewModel.lengthCheck().observe(this, numbersLength -> {
@@ -112,36 +103,41 @@ public class MainActivity extends AppCompatActivity {
 
         letterViewModel.getLetters().observe(this, character -> {
             tvGeneratedItems.setText(character.toString());
+            playerSwitch();
+        });
 
-            if(tvPlayerTurn.getText().toString() == "Player 1"){
-                tvPlayerTurn.setText("Player 2");
-            }
-            else{
-                tvPlayerTurn.setText("Player 1");
+        letterViewModel.lengthCheck().observe(this, numbersLength -> {
+            if(numbersLength + 1 == LetterViewModel.MAX_LETTERS) {
+                getSupportFragmentManager().beginTransaction()
+                        .remove(letterFragment)
+                        .commit();
+                btnStartRound.setVisibility(View.VISIBLE);
+                tvPlayerTurn.setVisibility(View.INVISIBLE);
             }
         });
 
         metaViewModel.getCheckRound().observe(this, round -> {
             if(round == MetaViewModel.NUMBERS_ROUND){
-                tvRoundType.setText("Numbers");
+                tvRoundType.setText(ROUND_TYPE_1);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_insert, numberFragment)
                         .commit();
             }
             else{
-                tvRoundType.setText("Letters");
+                tvRoundType.setText(ROUND_TYPE_2);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_insert, letterFragment)
                         .commit();
             }
             tvRoundNumber.setText("Round " + String.valueOf(metaViewModel.currentRound) + ":");
-            Toast.makeText(getApplicationContext(), String.valueOf(metaViewModel.currentRound),Toast.LENGTH_SHORT).show();
         });
 
     }
 
     public void startRound(View v){
-        tvGoal.setText(valueOf(numberViewModel.genGoal()));
+        if(tvRoundType.getText() == ROUND_TYPE_1) {
+            tvGoal.setText(valueOf(numberViewModel.genGoal()));
+        }
         btnStartRound.setVisibility(View.INVISIBLE);
         startTimer();
     }
@@ -150,18 +146,31 @@ public class MainActivity extends AppCompatActivity {
         //TODO: Take the users' answers and send them to the solver
         //TODO: Show solver solutions
         //TODO: Show button for next round
-        metaViewModel.updateScores(
-                Integer.parseInt(etAnswer1.getText().toString()),
-                Integer.parseInt(etAnswer2.getText().toString()),
-                numberViewModel.getGoalNumber());
+        if(tvRoundType.getText() == ROUND_TYPE_1) {
+            try {
+                metaViewModel.updateScores(
+                        Integer.parseInt(solutionsFragment.getNumberSolutions()[0]),
+                        Integer.parseInt(solutionsFragment.getNumberSolutions()[1]),
+                        numberViewModel.getGoalNumber());
+            } catch (Exception e) {
+                System.out.println(e.getCause());
+            }
+        }
+        else{
+            try {
+                metaViewModel.updateScores(
+                        Integer.parseInt(solutionsFragment.getLetterSolutions()[0]),
+                        Integer.parseInt(solutionsFragment.getLetterSolutions()[1]),
+                        letterViewModel.MAX_LETTERS);
+            } catch (Exception e) {
+                System.out.println(e.getCause());
+            }
+        }
 
-        etAnswer1.setVisibility(View.INVISIBLE);
-        tvScore1.append(valueOf(metaViewModel.getPlayer1Score()));
-        tvScore1.setVisibility(View.VISIBLE);
-
-        etAnswer2.setVisibility(View.INVISIBLE);
-        tvScore2.append(valueOf(metaViewModel.getPlayer2Score()));
-        tvScore2.setVisibility(View.VISIBLE);
+        solutionsFragment.clearAnswers();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_insert, scoresFragment)
+                .commit();
 
         btnEndRound.setVisibility(View.INVISIBLE);
         btnNextRound.setVisibility(View.VISIBLE);
@@ -172,7 +181,10 @@ public class MainActivity extends AppCompatActivity {
         //TODO: Implement nextRound from MetaViewModel
         metaViewModel.nextRound();
         numberViewModel.clearNumbers();
+        tvGoal.setText("");
+        numberViewModel.clearGoal();
         letterViewModel.clearLetters();
+        tvPlayerTurn.setVisibility(View.VISIBLE);
         btnNextRound.setVisibility(View.INVISIBLE);
     }
 
@@ -188,10 +200,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish(){
-                etAnswer1.setVisibility(View.VISIBLE);
-                etAnswer2.setVisibility(View.VISIBLE);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_insert, solutionsFragment)
+                        .commit();
                 btnEndRound.setVisibility(View.VISIBLE);
             }
         }.start();
+    }
+
+    public void playerSwitch(){
+        if(tvPlayerTurn.getText().toString() == "Player 1"){
+            tvPlayerTurn.setText("Player 2");
+        }
+        else{
+            tvPlayerTurn.setText("Player 1");
+        }
     }
 }

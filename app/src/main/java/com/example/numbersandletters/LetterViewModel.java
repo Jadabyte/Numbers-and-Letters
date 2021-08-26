@@ -10,7 +10,7 @@ public class LetterViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Character>> letters;
     private MutableLiveData<Integer> lettersLength;
 
-    private static final int MAX_LETTERS = 9;
+    public static final int MAX_LETTERS = 9;
 
     public MutableLiveData<ArrayList<Character>> getLetters(){
         if(letters == null){
