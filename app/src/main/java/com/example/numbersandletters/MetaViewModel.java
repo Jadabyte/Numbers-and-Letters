@@ -14,6 +14,8 @@ public class MetaViewModel extends ViewModel {
     public int currentRound = 1;
     public int player1Score;
     public int player2Score;
+    public String player1Name = "Player 1";
+    public String player2Name = "Player 2";
 
     public static final int TOTAL_ROUNDS = 6;
     public static final int NUMBERS_ROUND = 0;
@@ -36,8 +38,6 @@ public class MetaViewModel extends ViewModel {
     }
 
     public void nextRound(){
-        //TODO: After each round, the counter must go up and the correct round type must be shown
-        //TODO: Make it so there's 2 number rounds followed by 1 letters round (x2)
         if (currentRound == LETTERS_ROUND_1 || currentRound == LETTERS_ROUND_2){
             getCheckRound().setValue(1);
         }

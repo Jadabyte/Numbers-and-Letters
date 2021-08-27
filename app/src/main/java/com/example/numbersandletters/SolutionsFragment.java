@@ -7,14 +7,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import be.bluebanana.zakisolver.NumberSolver;
+
 public class SolutionsFragment extends Fragment {
 
     MetaViewModel metaViewModel;
+    NumberViewModel numberViewModel;
+    LetterViewModel letterViewModel;
     EditText answer1;
     EditText answer2;
 

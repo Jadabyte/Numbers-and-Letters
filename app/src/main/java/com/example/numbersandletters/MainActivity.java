@@ -10,11 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import be.bluebanana.zakisolver.NumberSolver;
 
 import static java.lang.String.valueOf;
 
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int TIMER_LENGTH = 1; // Timer length in seconds
     private final static String ROUND_TYPE_1 = "Numbers";
     private final static String ROUND_TYPE_2 = "Letters";
+    final NumberSolver solver = new NumberSolver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
          * ------------------------------------------
          * */
 
-        tvPlayerTurn.setText("Player 1");
-
+        tvPlayerTurn.setText(metaViewModel.player1Name);
         numberViewModel.getNumbers().observe(this, number -> {
             tvGeneratedItems.setText(number.toString());
             playerSwitch();
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.fragment_insert, letterFragment)
                         .commit();
             }
-            tvRoundNumber.setText("Round " + String.valueOf(metaViewModel.currentRound) + ":");
+            tvRoundNumber.setText(getString(R.string.roundLabel) + String.valueOf(metaViewModel.currentRound) + getString(R.string.colon));
         });
 
     }
@@ -145,13 +148,31 @@ public class MainActivity extends AppCompatActivity {
     public void endRound(View v){
         //TODO: Take the users' answers and send them to the solver
         //TODO: Show solver solutions
-        //TODO: Show button for next round
         if(tvRoundType.getText() == ROUND_TYPE_1) {
             try {
                 metaViewModel.updateScores(
                         Integer.parseInt(solutionsFragment.getNumberSolutions()[0]),
                         Integer.parseInt(solutionsFragment.getNumberSolutions()[1]),
                         numberViewModel.getGoalNumber());
+            } catch (Exception e) {
+                System.out.println(e.getCause());
+            }
+            //numberViewModel.numberSolver();
+            try{
+                solver.setInput(numberViewModel.getNumbers().getValue(), numberViewModel.getGoalNumber(),
+                        results -> {
+                            Log.d("ZAKI", String.format("Found %d matches.", results.size()));
+
+                            if (results.size() == 0) {
+                                return;
+                            }
+                            results.stream()
+                                    .limit(10)
+                                    .forEach(result -> tvGoal.append(String.valueOf(result)));
+                        });
+
+                // Start the solver
+                new Thread(solver).start();
             } catch (Exception e) {
                 System.out.println(e.getCause());
             }
@@ -172,19 +193,23 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.fragment_insert, scoresFragment)
                 .commit();
 
+        tvGeneratedItems.setVisibility(View.INVISIBLE);
+        //tvGoal.setVisibility(View.INVISIBLE);
+
         btnEndRound.setVisibility(View.INVISIBLE);
         btnNextRound.setVisibility(View.VISIBLE);
 
     }
 
     public void nextRound(View v){
-        //TODO: Implement nextRound from MetaViewModel
         metaViewModel.nextRound();
         numberViewModel.clearNumbers();
         tvGoal.setText("");
         numberViewModel.clearGoal();
         letterViewModel.clearLetters();
         tvPlayerTurn.setVisibility(View.VISIBLE);
+        tvGeneratedItems.setVisibility(View.VISIBLE);
+        tvGoal.setVisibility(View.VISIBLE);
         btnNextRound.setVisibility(View.INVISIBLE);
     }
 
@@ -209,11 +234,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void playerSwitch(){
-        if(tvPlayerTurn.getText().toString() == "Player 1"){
-            tvPlayerTurn.setText("Player 2");
+        if(tvPlayerTurn.getText().toString() == metaViewModel.player1Name){
+            tvPlayerTurn.setText(metaViewModel.player2Name);
         }
         else{
-            tvPlayerTurn.setText("Player 1");
+            tvPlayerTurn.setText(metaViewModel.player1Name);
         }
     }
 }

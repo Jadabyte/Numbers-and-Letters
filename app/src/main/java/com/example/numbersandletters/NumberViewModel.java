@@ -1,10 +1,16 @@
 package com.example.numbersandletters;
 
+import android.util.Log;
+import android.view.View;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
+
+import be.bluebanana.zakisolver.NumberSolver;
 
 public class NumberViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Integer>> numbers;
@@ -75,5 +81,8 @@ public class NumberViewModel extends ViewModel {
 
     public void clearGoal(){
         goalNumber = null;
+    }
+
+    public void numberSolver(){
     }
 }

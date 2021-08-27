@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,18 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import be.bluebanana.zakisolver.NumberSolver;
+
 import static java.lang.String.valueOf;
 
 public class ScoresFragment extends Fragment {
 
     MetaViewModel metaViewModel;
+    NumberViewModel numberViewModel;
+    LetterViewModel letterViewModel;
     TextView score1;
     TextView score2;
+    TextView tvSolverSolutions;
 
     public ScoresFragment() {
         // Required empty public constructor
@@ -45,6 +51,7 @@ public class ScoresFragment extends Fragment {
 
         score1 = v.findViewById(R.id.tv_score_1);
         score2 = v.findViewById(R.id.tv_score_2);
+        tvSolverSolutions = v.findViewById(R.id.tv_solver_solutions);
 
         score1.setText(String.valueOf(metaViewModel.player1Score));
         score2.setText(String.valueOf(metaViewModel.player2Score));
