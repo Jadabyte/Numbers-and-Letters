@@ -50,17 +50,43 @@ public class SolutionsFragment extends Fragment {
     }
 
     public String[] getNumberSolutions(){
-        String[] answers = {answer1.getText().toString(), answer2.getText().toString()};
-        return answers;
+        String[] emptyAnswers = null;
+
+        if(checkInputField()){
+            String[] answers = {answer1.getText().toString(), answer2.getText().toString()};
+            return answers;
+        }
+
+        return emptyAnswers;
     }
 
     public String[] getLetterSolutions(){
-        String[] answers = {String.valueOf(answer1.getText().toString().length()), String.valueOf(answer2.getText().toString().length())};
-        return answers;
+        String[] emptyAnswers = null;
+
+        if(checkInputField()){
+            String[] answers = {String.valueOf(answer1.getText().toString().length()), String.valueOf(answer2.getText().toString().length())};
+            return answers;
+        }
+
+        return emptyAnswers;
     }
 
     public void clearAnswers(){
         answer1.setText("");
         answer2.setText("");
+    }
+
+    public boolean checkInputField(){
+        boolean check = false;
+
+        if(answer1.getText().toString().trim().equalsIgnoreCase("")){
+            answer1.setError("Please provide an answer");
+        } else if(answer2.getText().toString().trim().equalsIgnoreCase("")){
+            answer2.setError("Please provide an answer");
+        } else {
+            check = true;
+        }
+
+        return check;
     }
 }

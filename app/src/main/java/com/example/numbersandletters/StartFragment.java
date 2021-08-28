@@ -6,18 +6,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import be.bluebanana.zakisolver.LetterSolver;
+public class StartFragment extends Fragment {
 
-public class LetterFragment extends Fragment {
+    MetaViewModel metaViewModel;
+    TextView tvName1;
+    TextView tvName2;
 
-    LetterViewModel letterViewModel;
-
-    public LetterFragment() {
+    public StartFragment() {
         // Required empty public constructor
     }
 
@@ -29,23 +29,23 @@ public class LetterFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        letterViewModel = new ViewModelProvider(getActivity()).get(LetterViewModel.class);
+        metaViewModel = new ViewModelProvider(getActivity()).get(MetaViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_letter, container, false);
+        View v = inflater.inflate(R.layout.fragment_start, container, false);
 
-        v.findViewById(R.id.btn_gen_consonant).setOnClickListener(view -> {
-            letterViewModel.genConsonant();
-        });
-
-        v.findViewById(R.id.btn_gen_vowel).setOnClickListener(view -> {
-            letterViewModel.genVowel();
-        });
+        tvName1 = v.findViewById(R.id.tv_name_1);
+        tvName2 = v.findViewById(R.id.tv_name_2);
 
         return v;
+    }
+
+    public String[] registerUserNames(){
+        String[] userNames = {tvName1.getText().toString(), tvName2.getText().toString()};
+        return userNames;
     }
 }

@@ -64,6 +64,10 @@ public class MetaViewModel extends ViewModel {
         if(scoreCheck(answer1, goal) < scoreCheck(answer2, goal)){
             player1Score++;
         }
+        else if(scoreCheck(answer1, goal) == scoreCheck(answer2, goal)){
+            player1Score++;
+            player2Score++;
+        }
         else{
             player2Score++;
         }

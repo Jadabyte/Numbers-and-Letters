@@ -8,10 +8,12 @@
 
     <EditText
         android:id="@+id/et_answer_2"
-        android:layout_width="100sp"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="128dp"
         android:hint="Answer 2"
+        android:textColor="@color/white"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -19,10 +21,12 @@
 
     <EditText
         android:id="@+id/et_answer_1"
-        android:layout_width="100sp"
+        android:layout_width="150sp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="128dp"
         android:hint="Answer 1"
+        android:textColor="@color/white"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/et_answer_2"
         app:layout_constraintHorizontal_bias="0.5"
