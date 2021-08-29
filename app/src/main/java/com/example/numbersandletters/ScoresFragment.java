@@ -86,4 +86,8 @@ public class ScoresFragment extends Fragment {
         // Start the solver
         new Thread(solver).start();
     }
+
+    public void endOfGame(){
+        tvSolverSolutions.setText("End of Game");
+    }
 }

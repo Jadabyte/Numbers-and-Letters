@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnStartRound;
     Button btnEndRound;
     Button btnNextRound;
+    Button btnNewGame;
 
     NumberViewModel numberViewModel;
     LetterViewModel letterViewModel;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /**
+        /*
          * ------------------------------------------
          * Area for defining ViewModels and Fragments
          * ------------------------------------------
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         scoresFragment = new ScoresFragment();
         startFragment = new StartFragment();
 
-        /**
+        /*
          * ------------------------------------------
          * Area for defining items in views
          * ------------------------------------------
@@ -83,8 +84,9 @@ public class MainActivity extends AppCompatActivity {
         btnStartRound = findViewById(R.id.btn_start_round);
         btnEndRound = findViewById(R.id.btn_finish_round);
         btnNextRound = findViewById(R.id.btn_next_round);
+        btnNewGame = findViewById(R.id.btn_new_game);
 
-        /**
+        /*
          * ------------------------------------------
          * Rounds logic
          * ------------------------------------------
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                         .addToBackStack("")
                         .commit();
             }
-            tvRoundNumber.setText(getString(R.string.roundLabel) + String.valueOf(metaViewModel.currentRound) + getString(R.string.colon));
+            tvRoundNumber.setText(getString(R.string.roundLabel) + (metaViewModel.currentRound) + getString(R.string.colon));
         });
 
     }
@@ -191,6 +193,13 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack("")
                 .commit();
 
+        if(metaViewModel.currentRound == metaViewModel.TOTAL_ROUNDS + 1){
+            btnEndRound.setVisibility(View.INVISIBLE);
+            btnNewGame.setVisibility(View.VISIBLE);
+            scoresFragment.endOfGame();
+            return;
+        }
+
         tvGeneratedItems.setVisibility(View.INVISIBLE);
         //tvGoal.setVisibility(View.INVISIBLE);
 
@@ -224,6 +233,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newGame(View v){
+        tvPlayerTurn.setText(metaViewModel.player1Name);
+        btnNewGame.setVisibility(View.INVISIBLE);
+        metaViewModel.player1Score = 0;
+        metaViewModel.player2Score = 0;
+        metaViewModel.currentRound = 1;
+        nextRound(v);
         //TODO: Only usable after final round is completed
         //TODO: Clear all values and return to first screen
     }
@@ -231,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
     public void startTimer(){
         new CountDownTimer(TIMER_LENGTH * 1000, 1000){
             public void onTick(long millisUntilFinished){
-                tvTimer.setText("" + millisUntilFinished / 1000);
+                tvTimer.setText(String.valueOf(millisUntilFinished / 1000));
             }
 
             public void onFinish(){

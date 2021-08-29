@@ -17,9 +17,9 @@ public class MetaViewModel extends ViewModel {
     public String player1Name = "Player 1";
     public String player2Name = "Player 2";
 
-    public static final int TOTAL_ROUNDS = 6;
+    public static final int TOTAL_ROUNDS = 2;
     public static final int NUMBERS_ROUND = 0;
-    public static final int LETTERS_ROUND_1 = 1;
+    public static final int LETTERS_ROUND_1 = 2;
     public static final int LETTERS_ROUND_2 = 6;
 
     public MutableLiveData<Integer> getCheckRound() {
@@ -44,6 +44,7 @@ public class MetaViewModel extends ViewModel {
         else{
             getCheckRound().setValue(0);
         }
+
         currentRound = currentRound + 1;
     }
 
@@ -71,5 +72,12 @@ public class MetaViewModel extends ViewModel {
         else{
             player2Score++;
         }
+    }
+
+    public void newGame(){
+        checkRound = null;
+        player1Score = 0;
+        player2Score = 0;
+        currentRound = 1;
     }
 }
