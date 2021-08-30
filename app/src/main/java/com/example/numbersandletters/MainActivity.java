@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     ScoresFragment scoresFragment;
     StartFragment startFragment;
 
-    private final static int TIMER_LENGTH = 1; // Timer length in seconds
+    private final static int TIMER_LENGTH = 5; // Timer length in seconds
     private final static String ROUND_TYPE_1 = "Numbers";
     private final static String ROUND_TYPE_2 = "Letters";
     final NumberSolver solver = new NumberSolver();
