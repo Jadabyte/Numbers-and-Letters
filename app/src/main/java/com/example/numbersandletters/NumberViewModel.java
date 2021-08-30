@@ -25,6 +25,8 @@ public class NumberViewModel extends ViewModel {
     private static final int GOAL_NUMBER_FLOOR = 100;
     private static final int GOAL_NUMBER_CEIL = 1000;
 
+    final NumberSolver solver = new NumberSolver();
+
     public MutableLiveData<ArrayList<Integer>> getNumbers(){
         if(numbers == null){
             numbers = new MutableLiveData<ArrayList<Integer>>();
@@ -83,6 +85,22 @@ public class NumberViewModel extends ViewModel {
         goalNumber = null;
     }
 
-    public void numberSolver(){
+    public void numberSolver (View v) {
+        // set up the solver
+        solver.setInput(numbers.getValue(), goalNumber,
+                results -> {
+                    Log.d("ZAKI", String.format("Found %d matches.", results.size()));
+
+                    if (results.size() == 0) {
+                        Log.d("Warn", "No solutions found.");
+                        return;
+                    }
+                    results.stream()
+                            .limit(10)
+                            .forEach(result -> Log.d("TAG", String.format("%s\n", result)));
+                });
+
+        // Start the solver
+        new Thread(solver).start();
     }
 }

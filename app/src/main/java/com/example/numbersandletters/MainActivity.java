@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private final static String ROUND_TYPE_2 = "Letters";
     final NumberSolver solver = new NumberSolver();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         tvPlayerTurn.setText(metaViewModel.player1Name);
+
         numberViewModel.getNumbers().observe(this, number -> {
             tvGeneratedItems.setText(number.toString());
             playerSwitch();
@@ -164,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                         Integer.parseInt(solutionsFragment.getNumberSolutions()[0]),
                         Integer.parseInt(solutionsFragment.getNumberSolutions()[1]),
                         numberViewModel.getGoalNumber());
+                numberViewModel.numberSolver(v);
             } catch (Exception e) {
                 System.out.println(e);
                 return;
@@ -175,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         Integer.parseInt(solutionsFragment.getLetterSolutions()[0]),
                         Integer.parseInt(solutionsFragment.getLetterSolutions()[1]),
                         letterViewModel.MAX_LETTERS);
+                letterViewModel.letterSolver(v);
             } catch (Exception e) {
                 System.out.println(e);
                 return;
@@ -194,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         if(metaViewModel.currentRound == metaViewModel.TOTAL_ROUNDS + 1){
+            tvGeneratedItems.setVisibility(View.VISIBLE);
+
             btnEndRound.setVisibility(View.INVISIBLE);
             btnNewGame.setVisibility(View.VISIBLE);
             scoresFragment.endOfGame();
@@ -201,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         tvGeneratedItems.setVisibility(View.INVISIBLE);
-        //tvGoal.setVisibility(View.INVISIBLE);
+        tvGoal.setVisibility(View.INVISIBLE);
 
         btnEndRound.setVisibility(View.INVISIBLE);
         btnNextRound.setVisibility(View.VISIBLE);
@@ -220,18 +227,6 @@ public class MainActivity extends AppCompatActivity {
         btnNextRound.setVisibility(View.INVISIBLE);
     }
 
-    public void startGame(View v){
-        String[] names = startFragment.registerUserNames();
-
-        metaViewModel.player1Name = names[0];
-        metaViewModel.player2Name = names[1];
-
-        getSupportFragmentManager().beginTransaction()
-                .remove(startFragment)
-                .addToBackStack("")
-                .commit();
-    }
-
     public void newGame(View v){
         tvPlayerTurn.setText(metaViewModel.player1Name);
         btnNewGame.setVisibility(View.INVISIBLE);
@@ -239,8 +234,6 @@ public class MainActivity extends AppCompatActivity {
         metaViewModel.player2Score = 0;
         metaViewModel.currentRound = 1;
         nextRound(v);
-        //TODO: Only usable after final round is completed
-        //TODO: Clear all values and return to first screen
     }
 
     public void startTimer(){

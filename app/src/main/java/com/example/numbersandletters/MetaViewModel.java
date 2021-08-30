@@ -17,7 +17,7 @@ public class MetaViewModel extends ViewModel {
     public String player1Name = "Player 1";
     public String player2Name = "Player 2";
 
-    public static final int TOTAL_ROUNDS = 2;
+    public static final int TOTAL_ROUNDS = 1;
     public static final int NUMBERS_ROUND = 0;
     public static final int LETTERS_ROUND_1 = 2;
     public static final int LETTERS_ROUND_2 = 6;
