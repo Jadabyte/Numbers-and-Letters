@@ -17,8 +17,9 @@ public class MetaViewModel extends ViewModel {
     public String player1Name = "Player 1";
     public String player2Name = "Player 2";
 
-    public static final int TOTAL_ROUNDS = 6;
     public static final int NUMBERS_ROUND = 0;
+
+    public static final int TOTAL_ROUNDS = 6;
     public static final int LETTERS_ROUND_1 = 2;
     public static final int LETTERS_ROUND_2 = 6;
 
@@ -37,6 +38,7 @@ public class MetaViewModel extends ViewModel {
         return player2Score;
     }
 
+    //TODO: Use remained or modulus operator (%) to check for round type
     public void nextRound(){
         if (currentRound == LETTERS_ROUND_1 || currentRound == LETTERS_ROUND_2){
             getCheckRound().setValue(1);

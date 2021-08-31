@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
     private final static int TIMER_LENGTH = 5; // Timer length in seconds
     private final static String ROUND_TYPE_1 = "Numbers";
     private final static String ROUND_TYPE_2 = "Letters";
-    final NumberSolver solver = new NumberSolver();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -93,11 +92,8 @@ public class MainActivity extends AppCompatActivity {
          * Rounds logic
          * ------------------------------------------
          * */
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_insert, startFragment)
-                .commit();
-
         tvPlayerTurn.setText(metaViewModel.player1Name);
+        tvTimer.setText(String.valueOf(TIMER_LENGTH));
 
         numberViewModel.getNumbers().observe(this, number -> {
             tvGeneratedItems.setText(number.toString());
@@ -225,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
         tvGeneratedItems.setVisibility(View.VISIBLE);
         tvGoal.setVisibility(View.VISIBLE);
         btnNextRound.setVisibility(View.INVISIBLE);
+        tvTimer.setText(String.valueOf(TIMER_LENGTH));
     }
 
     public void newGame(View v){
